@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Sample script to get the IP's of www.google.com
+
+list=""
+
+for ip in $(dig +short "www.google.com" | grep -v '[[:alpha:]]' | sort); do
+	list=$list',"'$ip'"'
+done
+
+echo '['${list#','}']'

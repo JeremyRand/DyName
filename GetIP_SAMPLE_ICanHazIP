@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Sample script to get your own IP
+
+echo '["'$(curl -s icanhazip.com)'"]'
+

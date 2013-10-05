@@ -12,10 +12,19 @@ import json
 import argparse
 import configparser
 
-parser = argparse.ArgumentParser(description='VECLabs DyName: Namecoin Dynamic DNS Client')
+parser = argparse.ArgumentParser(description='VECLabs DyName: '
+                                             'Namecoin Dynamic DNS Client')
 
-parser.add_argument('configfile', help='Configuration File', metavar='Config.conf')
-parser.add_argument('--i-want-my-domain-to-be-stolen', dest='allow_unsafe_domains', action='store_const', const=True, default=False, help='Allows use of d/ names instead of dd/ names.  This is a security risk under most circumstances and could allow someone to permanently steal control of your domain.  Only use this if you really know what you\'re doing.')
+parser.add_argument('configfile', help='Configuration File', 
+                    metavar='Config.conf')
+parser.add_argument('--i-want-my-domain-to-be-stolen', 
+                    dest='allow_unsafe_domains', action='store_const', 
+                    const=True, default=False, 
+                    help='Allows use of d/ names instead of dd/ names.  This '
+                         'is a security risk under most circumstances and '
+                         'could allow someone to permanently steal control '
+                         'of your domain.  Only use this if you really know '
+                         'what you\'re doing.')
 
 args = parser.parse_args()
 
@@ -24,7 +33,11 @@ config = configparser.ConfigParser()
 config.read(args.configfile)
 
 try:
-    namecoind_session = AuthServiceProxy('http://' + config['DEFAULT']['RpcUser'] + ':' + config['DEFAULT']['RpcPassword'] + '@' + config['DEFAULT']['RpcHost'] + ':' + config['DEFAULT']['RpcPort'])
+    namecoind_session = AuthServiceProxy('http://' + 
+                                         config['DEFAULT']['RpcUser'] + ':' + 
+                                         config['DEFAULT']['RpcPassword'] + 
+                                         '@' + config['DEFAULT']['RpcHost'] + 
+                                         ':' + config['DEFAULT']['RpcPort'])
     
     print('namecoind is at block ' + str(namecoind_session.getblockcount()) )
 except:
@@ -49,11 +62,13 @@ for domain in config:
         continue
     
     if name[:3] != 'dd/' and not args.allow_unsafe_domains:
-        print('I will not allow the name ' + name + ' to be stolen without authorization.')
+        print('I will not allow the name ' + name + 
+              ' to be stolen without authorization.')
         continue
     
     try:
-        current_ip = json.loads(subprocess.check_output(source, universal_newlines=True))
+        current_ip = json.loads(subprocess.check_output(source, 
+                                universal_newlines=True))
         #print('Current IP = ' + json.dumps(current_ip))
     except:
         print('Could not get IP address for domain ' + str(domain))
@@ -66,7 +81,8 @@ for domain in config:
         continue
     
     try:
-        old_ip = json.loads(namecoind_session.name_list(name)[0]['value'])[resolver]
+        old_ip = json.loads(
+                 namecoind_session.name_list(name)[0]['value'])[resolver]
         #print('Old IP = ' + json.dumps(old_ip))
     except:
         old_ip = ''
@@ -85,10 +101,12 @@ for domain in config:
     if not perform_update:
         continue
     
-    print('New value: ' + '{ "' + resolver + '" : ' + json.dumps(current_ip) + ' }')
+    print('New value: ' + '{ "' + resolver + '" : ' + 
+                          json.dumps(current_ip) + ' }')
     
     try:
-        namecoind_session.name_update(name, '{ "' + resolver + '" : ' + json.dumps(current_ip) + ' }')
+        namecoind_session.name_update(name, '{ "' + resolver + '" : ' + 
+                                            json.dumps(current_ip) + ' }')
         print('name_update issued')
     except:
         print("name_update failed for name " + name)

@@ -37,7 +37,7 @@ Q: How do I make a .bit resolver understand dd/ names?
 A: Use the "import" field from your d/ name, and point it to your dd/ name.
 
 Q: Do all .bit resolvers support the "import" field?  
-A: No, and the ones which don't are inherently insecure.  Tell the developer of your favorite .bit resolver to support the "import" field.
+A: NMControl has supported it for a while.  If you find that the .bit resolver you're using doesn't support "import", you should stop using it and switch to NMControl.
 
 Q: Why not use d/ names with DyName?  
 A: Because the credentials to update or transfer your d/ name would be on an Internet-connected machine (possibly a front-facing server) with an unencrypted wallet.  If an attacker compromises your server, they could permanently steal your domain.  If you use a dd/ name with DyName, you can always change the "import" field in your d/ name in the event of attack and restore access to yourself.
